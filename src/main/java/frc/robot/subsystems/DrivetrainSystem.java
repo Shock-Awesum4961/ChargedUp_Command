@@ -4,9 +4,11 @@
 
 package frc.robot.subsystems;
 
+import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,6 +23,8 @@ public class DrivetrainSystem extends SubsystemBase {
 
     MecanumDrive m_robotDrive = null;
 
+    AHRS gyro = null;
+
   /** Creates a new Drivetrain. */
   public DrivetrainSystem() {
     frontLeft = new CANSparkMax(Constants.MotorCANIds.FRONT_LEFT, MotorType.kBrushless);
@@ -30,7 +34,11 @@ public class DrivetrainSystem extends SubsystemBase {
 
     m_robotDrive = new MecanumDrive(frontLeft, rearLeft, frontRight, rearRight);
 
+    m_robotDrive.setMaxOutput(.85);
+
     m_robotDrive.setDeadband(0);
+
+    gyro = new AHRS();
 
   }
 
@@ -70,9 +78,9 @@ public class DrivetrainSystem extends SubsystemBase {
 
   public void drive(double translation, double strafe, double rotation, boolean isSlowMode) {
     if(isSlowMode){
-      m_robotDrive.driveCartesian(translation/2,0,rotation/2);
+      m_robotDrive.driveCartesian(translation/2,0,rotation/2, Rotation2d.fromDegrees(gyro.getAngle()));
     } else {
-      m_robotDrive.driveCartesian(translation,0,rotation/2);
+      m_robotDrive.driveCartesian(translation,0,rotation/2, Rotation2d.fromDegrees(gyro.getAngle()));
     }
   }  
 }
