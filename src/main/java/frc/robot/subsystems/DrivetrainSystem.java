@@ -52,6 +52,11 @@ public class DrivetrainSystem extends SubsystemBase {
     m_backLeftEncoder = rearLeft.getEncoder();
     m_backRightEncoder = rearRight.getEncoder();
 
+    m_frontLeftEncoder.setPosition(0.0);
+    m_frontRightEncoder.setPosition(0.0);
+    m_backLeftEncoder.setPosition(0.0);
+    m_backRightEncoder.setPosition(0.0);
+
     m_robotDrive = new MecanumDrive(frontLeft, rearLeft, frontRight, rearRight);
 
     m_robotDrive.setMaxOutput(.85);
@@ -73,7 +78,7 @@ public class DrivetrainSystem extends SubsystemBase {
     // Creating my odometry object from the kinematics object and the initial wheel positions.
     // Here, our starting pose is 5 meters along the long end of the field and in the
     // center of the field along the short end, facing the opposing alliance wall.
-    MecanumDriveOdometry m_odometry = new MecanumDriveOdometry(
+    m_odometry = new MecanumDriveOdometry(
       m_kinematics,
       gyro.getRotation2d(),
       new MecanumDriveWheelPositions(
